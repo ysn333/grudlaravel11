@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <title>Dashboard</title>
+</head>
+<body class="bg-gray-100">
+
+    <div class="grid place-items-center ">
+        <div class="container mx-auto bg-white shadow-lg rounded-lg p-8 ">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <img src="https://purepng.com/public/uploads/large/purepng.com-batman-logobatmansuperherocomicdc-comicscatwomen-1701528526422cief3.png" class="w-20 h-15" alt="Batman Logo">
+                <a href="/create" class="btn btn-primary w-64 rounded-full">Add New Post</a>
+            </div>
+
+            <!-- Success Message -->
+            @if (session('success'))
+                <div class="alert alert-success mb-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
+
+            <!-- Table -->
+            <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="py-3 px-6">#</th>
+                            <th scope="col" class="py-3 px-6">Name</th>
+                            <th scope="col" class="py-3 px-6">Description</th>
+                            <th scope="col" class="py-3 px-6">Image</th>
+                            <th scope="col" class="py-3 px-6 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($posts as $post)
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td class="py-4 px-6">{{ $post->id }}</td>
+                                <td class="py-4 px-6">{{ $post->name }}</td>
+                                <td class="py-4 px-6">{{ $post->description }}</td>
+                                <td class="py-4 px-6">
+                                    <img src="images/{{ $post->image }}" alt="{{ $post->name }}" class="w-20 h-20 object-cover rounded">
+                                </td>
+                                <td class="py-4 px-6 text-center">
+                                    <a href="{{ route('edit', $post->id) }}" class="btn btn-sm btn-info mr-2">Update</a>
+                                    <form method="POST" action="{{ route('delete', $post->id) }}" class="inline">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="btn btn-sm btn-error" onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
